@@ -31,6 +31,7 @@ pub fn from_lists(symbols: List(List(a))) -> Odometer(a) {
 }
 
 // TODO: Prevent append after advance?
+// TODO: What should happen to overflow after appending?
 pub fn append(
   odometer: Odometer(a),
   symbols: List(a),
@@ -130,6 +131,7 @@ fn advance_loop(
   }
 }
 
+// TODO: Clean up logic
 fn advance_indices_loop(
   indices indices: List(Int),
   base base: Int,
