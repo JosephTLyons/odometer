@@ -88,7 +88,19 @@ pub fn multiple_overflow_test() {
   let od = advance_and_assert(od, by, ["b"], 0)
   let od = advance_and_assert(od, by, ["a"], 1)
   let od = advance_and_assert(od, by, ["b"], 1)
-  advance_and_assert(od, by, ["a"], 2)
+  let od = advance_and_assert(od, by, ["a"], 2)
+
+  let by = -1
+  let od = advance_and_assert(od, by, ["b"], 1)
+  let od = advance_and_assert(od, by, ["a"], 1)
+  let od = advance_and_assert(od, by, ["b"], 0)
+  let od = advance_and_assert(od, by, ["a"], 0)
+  let od = advance_and_assert(od, by, ["b"], -1)
+  let od = advance_and_assert(od, by, ["a"], -1)
+  let od = advance_and_assert(od, by, ["b"], -2)
+
+  let by = 10
+  advance_and_assert(od, by, ["b"], 3)
 }
 
 fn advance_and_assert(
