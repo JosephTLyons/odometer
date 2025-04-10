@@ -6,6 +6,19 @@ pub fn main() {
   gleeunit.main()
 }
 
+pub fn readme_example_test() {
+  let od =
+    odometer.new()
+    |> odometer.append(["🌑", "🌕"], 2)
+    |> odometer.append(["🌞", "⛅"], 2)
+  let readout = odometer.readout(od)
+  should.equal(readout, ["🌑", "🌑", "🌞", "🌞"])
+  let #(od, overflow) = odometer.advance(od, 10)
+  let readout = odometer.readout(od)
+  should.equal(readout, ["🌕", "🌑", "⛅", "🌞"])
+  should.equal(overflow, 0)
+}
+
 pub fn advance_by_negative_1_test() {
   let od =
     odometer.new()
