@@ -3,6 +3,8 @@ import gleam/list
 import gleam/order
 import glearray.{type Array}
 
+// TODO: Doc comments
+
 type Symbols(a) {
   Symbols(symbols: Array(a), indices: List(Int), base: Int)
 }
