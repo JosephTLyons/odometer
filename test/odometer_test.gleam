@@ -1,3 +1,6 @@
+import gleam/int
+import gleam/list
+import gleam/string
 import gleeunit
 import gleeunit/should
 import odometer.{type Odometer}
@@ -114,6 +117,26 @@ pub fn multiple_overflow_test() {
 
   let by = 10
   advance_and_assert(od, by, ["b"], 3)
+}
+
+pub fn number_test() {
+  let value = "123_456_789_000"
+  let groups = string.split(value, "_")
+  let number_of_groups = list.length(groups)
+
+  let number = string.replace(value, "_", "")
+  let assert Ok(number) = int.parse(number)
+
+  let #(od, overflow) =
+    odometer.new()
+    |> odometer.append(list.range(0, 999), number_of_groups)
+    |> odometer.advance(number)
+
+  let assert Ok(expected_output) = list.try_map(groups, int.parse)
+  let readout = odometer.readout(od)
+
+  should.equal(readout, expected_output)
+  should.equal(overflow, 0)
 }
 
 fn advance_and_assert(
