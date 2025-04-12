@@ -58,7 +58,6 @@ fn readout_symbol_loop(state: List(Symbols(a)), acc: List(a)) -> List(a) {
   }
 }
 
-// TODO: Rename
 fn readout_indices_loop(
   indices indices: List(Int),
   symbols symbols: Array(a),
@@ -114,17 +113,17 @@ fn advance_loop(
         advance_indices_loop(
           indices: symbols.indices,
           base: symbols.base,
-          by: by,
-          is_increase: is_increase,
+          by:,
+          is_increase:,
           acc: [],
         )
 
-      let symbols = Symbols(..symbols, indices: indices)
+      let symbols = Symbols(..symbols, indices:)
 
       case carry {
         0 -> #(list.reverse([symbols, ..acc]) |> list.append(rest), 0)
         _ ->
-          advance_loop(state: rest, by: carry, is_increase: is_increase, acc: [
+          advance_loop(state: rest, by: carry, is_increase:, acc: [
             symbols,
             ..acc
           ])
@@ -170,13 +169,7 @@ fn advance_indices_loop(
       case carry {
         0 -> #(list.reverse(acc) |> list.append(indices), 0)
         _ ->
-          advance_indices_loop(
-            indices:,
-            base:,
-            by: carry,
-            is_increase: is_increase,
-            acc:,
-          )
+          advance_indices_loop(indices:, base:, by: carry, is_increase:, acc:)
       }
     }
   }
