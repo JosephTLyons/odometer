@@ -133,7 +133,6 @@ fn advance_loop(
   }
 }
 
-// TODO: Clean up logic
 fn advance_indices_loop(
   indices indices: List(Int),
   base base: Int,
@@ -145,29 +144,23 @@ fn advance_indices_loop(
     [] -> #(list.reverse(acc), by)
     [index, ..indices] -> {
       let #(carry, remainder) = case is_increase {
-        True -> {
-          let new_index = index + by
-          div_mod(new_index, base)
-        }
+        True -> div_mod(index + by, base)
         False -> {
           let new_index = index - by
-          case new_index < 0 {
-            True -> {
+          case new_index >= 0 {
+            True -> #(0, new_index)
+            False -> {
               let abs_new_index = int.absolute_value(new_index)
-              let borrow_count =
-                abs_new_index
-                / base
-                + case abs_new_index % base {
-                  0 -> 0
-                  _ -> 1
-                }
+              let borrow_count = case div_mod(abs_new_index, base) {
+                #(q, 0) -> q
+                #(q, _) -> q + 1
+              }
               let remainder = case abs_new_index % base {
                 0 -> 0
                 r -> base - r
               }
               #(borrow_count, remainder)
             }
-            False -> #(0, new_index)
           }
         }
       }
