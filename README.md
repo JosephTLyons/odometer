@@ -18,7 +18,7 @@ import odometer
 
 pub fn main() {
   let od = odometer.new() |> odometer.append(["🌑", "🌕"], 2) |> odometer.append(["🌞", "⛅"], 2)
-  let readout = odometer.readout(od)
+  odometer.readout(od)
   // ["🌑", "🌑", "🌞", "🌞"]
 
   let #(od, overflow) = odometer.advance(od, 10)
