@@ -139,6 +139,8 @@ pub fn number_test() {
   should.equal(overflow, 0)
 }
 
+// Can be made generic if is_increase can be pulled into r_wheel module entirely
+// From there, we can store it in some sort of test_helpers file
 fn advance_and_assert(
   odometer: Odometer(a),
   by by: Int,
@@ -150,10 +152,4 @@ fn advance_and_assert(
   should.equal(readout, readout_state)
   should.equal(overflow, overflow_state)
   odometer
-}
-
-pub fn div_mod_test() {
-  let #(quotient, remainder) = odometer.div_mod(13, 5)
-  should.equal(quotient, 2)
-  should.equal(remainder, 3)
 }

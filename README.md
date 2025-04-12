@@ -3,7 +3,7 @@
 [![Package Version](https://img.shields.io/hexpm/v/odometer)](https://hex.pm/packages/odometer)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/odometer/)
 
-Cycle through symbol combinations.
+Cycle through item combinations.
 
 ## Installation
 
