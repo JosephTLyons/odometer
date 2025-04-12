@@ -5,12 +5,12 @@ import glearray.{type Array}
 
 // TODO: Doc comments
 
-type Symbols(a) {
-  Symbols(symbols: Array(a), indices: List(Int), base: Int)
+type Wheel(a) {
+  Wheel(symbols: Array(a), indices: List(Int), base: Int)
 }
 
-fn new_symbols(symbols symbols: List(a), repeat repeat: Int) -> Symbols(a) {
-  Symbols(
+fn new_wheel(symbols symbols: List(a), repeat repeat: Int) -> Wheel(a) {
+  Wheel(
     symbols: glearray.from_list(symbols),
     indices: list.repeat(0, repeat),
     base: list.length(symbols),
@@ -18,7 +18,7 @@ fn new_symbols(symbols symbols: List(a), repeat repeat: Int) -> Symbols(a) {
 }
 
 pub opaque type Odometer(a) {
-  Odometer(state: List(Symbols(a)), overflow: Int)
+  Odometer(state: List(Wheel(a)), overflow: Int)
 }
 
 pub fn new() {
@@ -28,7 +28,7 @@ pub fn new() {
 pub fn from_lists(symbols: List(List(a))) -> Odometer(a) {
   symbols
   |> list.reverse
-  |> list.map(new_symbols(symbols: _, repeat: 1))
+  |> list.map(new_wheel(symbols: _, repeat: 1))
   |> Odometer(overflow: 0)
 }
 
@@ -39,19 +39,19 @@ pub fn append(
   symbols: List(a),
   repeat: Int,
 ) -> Odometer(a) {
-  let symbols = new_symbols(symbols:, repeat:)
-  [symbols, ..odometer.state] |> Odometer(overflow: 0)
+  let wheel = new_wheel(symbols:, repeat:)
+  [wheel, ..odometer.state] |> Odometer(overflow: 0)
 }
 
 pub fn readout(odometer: Odometer(a)) -> List(a) {
   readout_symbol_loop(odometer.state, [])
 }
 
-fn readout_symbol_loop(state: List(Symbols(a)), acc: List(a)) -> List(a) {
+fn readout_symbol_loop(state: List(Wheel(a)), acc: List(a)) -> List(a) {
   case state {
     [] -> acc
     [first, ..rest] -> {
-      let Symbols(indices:, symbols:, base: _) = first
+      let Wheel(indices:, symbols:, base: _) = first
       let acc = readout_indices_loop(indices:, symbols:, acc:)
       readout_symbol_loop(rest, acc)
     }
@@ -99,34 +99,31 @@ pub fn advance(odometer: Odometer(a), by by: Int) -> #(Odometer(a), Int) {
 }
 
 fn advance_loop(
-  state state: List(Symbols(a)),
+  state state: List(Wheel(a)),
   by by: Int,
   is_increase is_increase: Bool,
-  acc acc: List(Symbols(a)),
-) -> #(List(Symbols(a)), Int) {
+  acc acc: List(Wheel(a)),
+) -> #(List(Wheel(a)), Int) {
   case state {
     [] -> {
       #(list.reverse(acc), by)
     }
-    [symbols, ..rest] -> {
+    [wheel, ..rest] -> {
       let #(indices, carry) =
         advance_indices_loop(
-          indices: symbols.indices,
-          base: symbols.base,
+          indices: wheel.indices,
+          base: wheel.base,
           by:,
           is_increase:,
           acc: [],
         )
 
-      let symbols = Symbols(..symbols, indices:)
+      let wheel = Wheel(..wheel, indices:)
 
       case carry {
-        0 -> #(list.reverse([symbols, ..acc]) |> list.append(rest), 0)
+        0 -> #(list.reverse([wheel, ..acc]) |> list.append(rest), 0)
         _ ->
-          advance_loop(state: rest, by: carry, is_increase:, acc: [
-            symbols,
-            ..acc
-          ])
+          advance_loop(state: rest, by: carry, is_increase:, acc: [wheel, ..acc])
       }
     }
   }
